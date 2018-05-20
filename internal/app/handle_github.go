@@ -61,12 +61,14 @@ func (s *server) handleGithub(rw http.ResponseWriter, rq *http.Request) {
 	default:
 	}
 
-	out, err := s.cmd.Run()
-	if err != nil {
-		s.logger.Printf("error executing command: %v", err)
-	} else {
-		s.logger.Printf("executed command with output: %s", out)
-	}
+	go func() {
+		out, err := s.cmd.Run()
+		if err != nil {
+			s.logger.Printf("error executing command: %v", err)
+		} else {
+			s.logger.Printf("executed command with output: %s", out)
+		}
+	}()
 
 	fmt.Fprintf(rw, "success")
 }
