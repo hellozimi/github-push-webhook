@@ -12,7 +12,7 @@ import (
 )
 
 type flags struct {
-	host, port, secret, contentType, cmd string
+	host, port, secret, contentType, event, cmd string
 }
 
 func main() {
@@ -24,6 +24,7 @@ func main() {
 	flag.StringVar(&options.secret, "secret", "", "the secret created on github.com")
 	flag.StringVar(&options.contentType, "content-type", "json", "expected content type. [json|form] default json")
 	flag.StringVar(&options.cmd, "cmd", "", "command to be run when push is received")
+	flag.StringVar(&options.event, "event", "push", "the webhook event type to listen for")
 
 	flag.Parse()
 
@@ -37,7 +38,7 @@ func main() {
 	c := cmd.New(options.cmd)
 
 	logger := log.New(os.Stdout, "app:\t", log.Lshortfile)
-	server := app.NewServer(options.contentType, options.secret, c, logger)
+	server := app.NewServer(options.contentType, options.secret, options.event, c, logger)
 
 	server.Listen(options.host, options.port)
 }

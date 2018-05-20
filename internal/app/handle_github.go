@@ -42,6 +42,13 @@ func (s *server) handleGithub(rw http.ResponseWriter, rq *http.Request) {
 		return
 	}
 
+	event := rq.Header.Get("X-GitHub-Event")
+	if event != s.event {
+		s.logger.Printf("incoming request has type (%s) expecting (%s), not triggering\n", event, s.event)
+		fmt.Fprintf(rw, "not triggered")
+		return
+	}
+
 	var payload webhook.Payload
 	switch ct {
 	case contentTypeJSON:

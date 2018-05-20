@@ -16,9 +16,9 @@ type Server interface {
 }
 
 type server struct {
-	logger              *log.Logger
-	cmd                 *cmd.Cmd
-	secret, contentType string
+	logger                     *log.Logger
+	cmd                        *cmd.Cmd
+	secret, contentType, event string
 	Server
 }
 
@@ -51,7 +51,7 @@ func (s *server) Listen(host, port string) {
 }
 
 // NewServer creates server object
-func NewServer(contentType, secret string, cmd *cmd.Cmd, logger *log.Logger) Server {
+func NewServer(contentType, secret, event string, cmd *cmd.Cmd, logger *log.Logger) Server {
 	if contentType == "form" {
 		contentType = "application/x-www-form-urlencoded"
 	} else if contentType == "json" {
@@ -61,6 +61,7 @@ func NewServer(contentType, secret string, cmd *cmd.Cmd, logger *log.Logger) Ser
 		cmd:         cmd,
 		secret:      secret,
 		contentType: contentType,
+		event:       event,
 		logger:      logger,
 	}
 }
